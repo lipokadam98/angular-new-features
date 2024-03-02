@@ -1,0 +1,38 @@
+.user-details {
+  box-shadow: 0 0 2px rgba(128, 128, 128, 0.76);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  font-family: Arial, serif;
+
+  .left-side {
+    display: flex;
+    flex-direction: column;
+
+    .header {
+
+    }
+
+    .content {
+
+    }
+  }
+
+  .right-side {
+    button {
+      border-radius: 0.5rem;
+      padding: 1rem;
+      border: none;
+      background-color: whitesmoke;
+    }
+
+    button:active {
+      background-color: aquamarine;
+    }
+  }
+
+}
