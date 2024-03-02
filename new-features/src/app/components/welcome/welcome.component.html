@@ -1,0 +1,11 @@
+<main>
+  @for (user of users(); track user) {
+    @defer (on viewport) {
+      <app-user [user]="user"></app-user>
+    } @placeholder (minimum 100ms) {
+      <p>No user was loaded</p>
+    }
+  } @empty {
+    <p>No users sorry</p>
+  }
+</main>
