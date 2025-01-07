@@ -16,8 +16,14 @@ import {toObservable, toSignal, outputToObservable, outputFromObservable} from "
         CoursesCardListComponent
     ],
     templateUrl: './home.component.html',
-    styleUrl: './home.component.scss'
+    styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+  counter = signal(0);
+  //Signals can also be readonly
+  //counter = signal(0).asReadonly();
 
+  increment() {
+    this.counter.update(counter=> counter + 1);
+  }
 }
