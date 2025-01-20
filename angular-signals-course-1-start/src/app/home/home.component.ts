@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {MessagesService} from "../messages/messages.service";
 import {catchError, from, throwError} from "rxjs";
 import {toObservable, toSignal, outputToObservable, outputFromObservable} from "@angular/core/rxjs-interop";
+import {CoursesServiceWithFetch} from "../services/courses-fetch.service";
 
 type Counter = {
   value: number
@@ -23,21 +24,21 @@ type Counter = {
     styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  counter = signal<Counter>({value: 100});
-  //Signals can also be readonly
-  //counter = signal(0).asReadonly();
-  values = signal<number[]>([0]);
+  courses = signal<Course[]>([])
 
-  increment() {
-    this.counter.update(counter=> counter = ({
-      ...counter,
-      value: counter.value + 1
-    }));
-    //This is the wrong way to update signal values
-    //this.counter().value++;
+  coursesService = inject(CoursesServiceWithFetch);
+
+  constructor() {
+    this.loadCourses().then(()=> console.log(`All courses loaded: `, this.courses()));
   }
 
-  append(){
-    
+  async loadCourses(){
+    try{
+      const courses = await this.coursesService.loadAllCourses();
+      this.courses.set(courses);
+    }catch (err){
+      alert('Error loading courses!');
+      console.error(err);
+    }
   }
 }
