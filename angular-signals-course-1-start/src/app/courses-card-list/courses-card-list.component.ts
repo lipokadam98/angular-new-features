@@ -23,7 +23,5 @@ export class CoursesCardListComponent {
       title: 'Update existing course',
       course
     });
-
-   console.log(newCourse);
   }
 }
