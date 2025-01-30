@@ -15,6 +15,10 @@ import {EditCourseDialogComponent, openEditCourseDialog} from "../edit-course-di
 export class CoursesCardListComponent {
 
   courses = input.required<Course[]>();
+
+  courseUpdated = output<Course>();
+  courseDeleted = output<string>();
+
   matDialog = inject(MatDialog);
 
   async onEditCourse(course: Course) {
@@ -23,5 +27,11 @@ export class CoursesCardListComponent {
       title: 'Update existing course',
       course
     });
+
+   this.courseUpdated.emit(newCourse);
+  }
+
+  onDeleteCourse(course: Course) {
+    this.courseDeleted.emit(course.id);
   }
 }

@@ -8,6 +8,7 @@ import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angula
 import {CourseCategoryComboboxComponent} from "../course-category-combobox/course-category-combobox.component";
 import {CourseCategory} from "../models/course-category.model";
 import {firstValueFrom} from "rxjs";
+import {createCourse} from "../../../server/create-course.route";
 
 @Component({
   selector: 'edit-course-dialog',
@@ -25,6 +26,7 @@ export class EditCourseDialogComponent {
   data: EditCourseDialogData = inject(MAT_DIALOG_DATA);
 
   fb = inject(FormBuilder);
+  coursesService = inject(CoursesService);
 
   form = this.fb.group({
     title: new FormControl("", [Validators.required]),
@@ -35,7 +37,7 @@ export class EditCourseDialogComponent {
 
   constructor() {
     this.form.patchValue({
-      title: this.data?.title,
+      title: this.data?.course?.title,
       longDescription: this.data?.course?.longDescription,
       category: this.data?.course?.category,
       iconUrl: this.data?.course?.iconUrl,
@@ -44,6 +46,35 @@ export class EditCourseDialogComponent {
 
   onClose() {
     this.matDialogRef.close();
+  }
+
+  async onSave() {
+    const courseProps = this.form.value as Partial<Course>;
+    if(this.data.mode === "update"){
+      await this.saveCourse(this.data?.course!.id, courseProps);
+    }else {
+      await this.createNewCourse(courseProps);
+    }
+  }
+
+  async createNewCourse(partialCourse: Partial<Course>){
+    try {
+      const newCourse = await this.coursesService.createCourse(partialCourse);
+      this.matDialogRef.close(newCourse);
+    }catch (error){
+      console.error(error);
+      alert('Failed to create the course.');
+    }
+  }
+
+  async saveCourse(courseId: string, changes: Partial<Course>){
+    try {
+      const updatedCourse = await this.coursesService.saveCourse(courseId,changes);
+      this.matDialogRef.close(updatedCourse);
+    }catch (error){
+      console.error(error);
+      alert('Failed to save the course.');
+    }
   }
 }
 
