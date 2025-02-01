@@ -40,8 +40,9 @@ export class HomeComponent {
   })
 
   coursesService = inject(CoursesService);
-
+  messagesService = inject(MessagesService)
   matDialog = inject(MatDialog);
+
   constructor() {
 
     effect(() => {
@@ -58,7 +59,7 @@ export class HomeComponent {
       const courses = await this.coursesService.loadAllCourses();
       this.#courses.set(courses.sort(sortCoursesBySeqNo));
     }catch (err){
-      alert('Error loading courses!');
+      this.messagesService.showMessage('Error loading courses!',"error");
       console.error(err);
     }
   }
