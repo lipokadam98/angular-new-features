@@ -14,6 +14,30 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
     styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  formBuilder = inject(FormBuilder);
+  form = this.formBuilder.group({
+    email: [''],
+    password: ['']
+  })
 
+  messagesService = inject(MessagesService);
+  authService  = inject(AuthService);
+  router  = inject(Router);
 
+  async onLogin() {
+    try {
+      const {email, password} = this.form.value;
+      if(!email || !password){
+        this.messagesService.showMessage('Enter an email and password.','error');
+        return;
+      }
+
+      await this.authService.login(email,password);
+      await this.router.navigate(['/home']);
+
+    }catch (err){
+      console.error(err);
+      this.messagesService.showMessage('Login failed, please try again','error');
+    }
+  }
 }
