@@ -1,4 +1,4 @@
-import {Component, effect, inject, signal} from '@angular/core';
+import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Course} from "../models/course.model";
 import {EditCourseDialogData} from "./edit-course-dialog.data.model";
@@ -31,17 +31,23 @@ export class EditCourseDialogComponent {
   form = this.fb.group({
     title: new FormControl("", [Validators.required]),
     longDescription: new FormControl("", [Validators.required]),
-    category: new FormControl("", [Validators.required]),
     iconUrl: new FormControl("", [Validators.required])
   })
+
+  category = signal<CourseCategory>("BEGINNER");
 
   constructor() {
     this.form.patchValue({
       title: this.data?.course?.title,
       longDescription: this.data?.course?.longDescription,
-      category: this.data?.course?.category,
       iconUrl: this.data?.course?.iconUrl,
     })
+
+    this.category.set(this.data?.course?.category ?? 'BEGINNER');
+    effect(() => {
+      const category = this.category();
+      console.log(category)
+    });
   }
 
   onClose() {
@@ -50,6 +56,7 @@ export class EditCourseDialogComponent {
 
   async onSave() {
     const courseProps = this.form.value as Partial<Course>;
+    courseProps.category = this.category();
     if(this.data.mode === "update"){
       await this.saveCourse(this.data?.course!.id, courseProps);
     }else {
