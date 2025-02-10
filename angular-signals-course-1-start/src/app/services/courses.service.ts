@@ -38,4 +38,9 @@ export class CoursesService {
    await firstValueFrom(delete$);
   }
 
+  async getCourseById(courseId: string): Promise<Course>{
+    const course$ = this.httpClient.get<Course>(`${this.env.apiRoot}/courses/${courseId}`);
+    return firstValueFrom(course$);
+  }
+
 }

@@ -16,8 +16,8 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 export class LoginComponent {
   formBuilder = inject(FormBuilder);
   form = this.formBuilder.group({
-    email: [''],
-    password: ['']
+    email: ['test@angular-university.io'],
+    password: ['test']
   })
 
   messagesService = inject(MessagesService);
