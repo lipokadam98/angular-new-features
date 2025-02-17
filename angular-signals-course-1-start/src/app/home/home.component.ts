@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, Injector, signal} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, Injector, signal, viewChild} from '@angular/core';
 import {CoursesService} from "../services/courses.service";
 import {Course, sortCoursesBySeqNo} from "../models/course.model";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
@@ -11,6 +11,7 @@ import {CoursesServiceWithFetch} from "../services/courses-fetch.service";
 import {addWarning} from "@angular-devkit/build-angular/src/utils/webpack-diagnostics";
 import {openEditCourseDialog} from "../edit-course-dialog/edit-course-dialog.component";
 import {LoadingService} from "../loading/loading.service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 type Counter = {
   value: number
@@ -18,11 +19,12 @@ type Counter = {
 
 @Component({
     selector: 'home',
-    imports: [
-        MatTabGroup,
-        MatTab,
-        CoursesCardListComponent
-    ],
+  imports: [
+    MatTabGroup,
+    MatTab,
+    CoursesCardListComponent,
+    MatTooltip
+  ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
 })
@@ -42,8 +44,16 @@ export class HomeComponent {
   coursesService = inject(CoursesService);
   messagesService = inject(MessagesService)
   matDialog = inject(MatDialog);
+  beginnersList = viewChild('beginnersList',{
+    read: MatTooltip
+  });
 
   constructor() {
+
+    effect(() => {
+      const beginnersList = this.beginnersList();
+      console.log(beginnersList);
+    });
 
     effect(() => {
       console.log(`Beginner courses: `, this.beginnerCourses());
@@ -52,6 +62,7 @@ export class HomeComponent {
     this.loadCourses().then(()=> {
       console.log(`All courses loaded: `, this.#courses())
     });
+
   }
 
   async loadCourses(){
