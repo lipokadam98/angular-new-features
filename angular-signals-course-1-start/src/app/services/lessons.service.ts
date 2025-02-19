@@ -27,8 +27,9 @@ export class LessonsService {
     }
 
     if(query){
-      params.set("query",query);
+      params = params.set("query",query);
     }
+
     const lessons$ = this.httpClient.get<GetLessonsResponse>(`${this.env.apiRoot}/search-lessons`,{
       params
     });
@@ -36,6 +37,11 @@ export class LessonsService {
     const response = await firstValueFrom(lessons$);
 
     return response.lessons;
+  }
+
+  async saveLesson(lessonId: string, changes: Partial<Lesson>): Promise<Lesson>{
+    const saveLesson$ = this.httpClient.put<Lesson>(`${this.env.apiRoot}/lessons/${lessonId}`,changes);
+    return firstValueFrom(saveLesson$);
   }
 
 }
