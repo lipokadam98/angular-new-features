@@ -5,7 +5,7 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {CoursesCardListComponent} from "../courses-card-list/courses-card-list.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MessagesService} from "../messages/messages.service";
-import {catchError, from, throwError} from "rxjs";
+import {catchError, from, of, throwError} from "rxjs";
 import {toObservable, toSignal, outputToObservable, outputFromObservable} from "@angular/core/rxjs-interop";
 import {CoursesServiceWithFetch} from "../services/courses-fetch.service";
 import {addWarning} from "@angular-devkit/build-angular/src/utils/webpack-diagnostics";
@@ -48,7 +48,13 @@ export class HomeComponent {
     read: MatTooltip
   });
 
+  courses$ = toObservable(this.#courses);
+
+  injector = inject(Injector);
+
   constructor() {
+
+    this.courses$.subscribe()
 
     effect(() => {
       const beginnersList = this.beginnersList();
@@ -105,5 +111,20 @@ export class HomeComponent {
     if (newCourse){
       this.#courses.update(courses=> [...courses, newCourse]);
     }
+  }
+
+  onToObservableExample(){
+    const numbers = signal(0);
+    const numbers$ = toObservable(numbers,{
+      injector: this.injector
+    })
+  }
+
+  onToSignalExample(){
+    const example$ = of(0);
+
+    const courses = toSignal(example$,{
+      injector: this.injector
+    });
   }
 }
