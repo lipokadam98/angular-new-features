@@ -13,11 +13,13 @@
     </div>
 
 </div>
-
+      @if (lessons.isLoading) {
+          <mat-spinner class="loading"></mat-spinner>
+      }
 
       <div class="table-container">
         <table class="results-table">
-          @for(lesson of lessons(); track lesson.id) {
+          @for(lesson of lessons.value(); track lesson.id) {
             <tr>
               <td>
                 {{lesson.description}}
