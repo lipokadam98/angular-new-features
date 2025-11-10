@@ -1,0 +1,19 @@
+<section>
+  <button (click)="add()">
+    Add 1
+  </button>
+  <button (click)="subtract()">
+    Subtract 1
+  </button>
+
+  <h1>
+    {{ counter() }}
+  </h1>
+
+  <h1>
+    Counter without signal
+    {{ counterWithoutSignal }}
+  </h1>
+
+  <child [(someModelInput)]="counter" [originalInput]="0"></child>
+</section>
